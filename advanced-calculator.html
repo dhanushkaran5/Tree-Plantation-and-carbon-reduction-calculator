@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Calculator - EcoTree Impact Analyzer</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .feature-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .feature-tab {
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+        }
+        .feature-tab.active {
+            color: var(--green-primary);
+            border-bottom-color: var(--green-primary);
+            font-weight: 600;
+        }
+        .feature-tab:hover {
+            color: var(--green-primary);
+            background: var(--green-light);
+        }
+        .feature-content {
+            display: none;
+        }
+        .feature-content.active {
+            display: block;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-dark) 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+        .optimizer-result {
+            background: var(--green-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            border-left: 4px solid var(--green-primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L8 8H10V14H14V8H16L12 2Z" fill="white" opacity="0.9"/>
+                        <path d="M12 14V22M10 14C10 14 7 12 7 9C7 6 9 6 10 6M14 14C14 14 17 12 17 9C17 6 15 6 14 6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                        <circle cx="7" cy="9" r="0.8" fill="white" opacity="0.7"/>
+                        <circle cx="17" cy="9" r="0.8" fill="white" opacity="0.7"/>
+                        <path d="M6 12L4 10M18 12L20 10" stroke="white" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-text-main">EcoTree</span>
+                    <span class="logo-text-sub">Impact Analyzer</span>
+                </div>
+            </a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="calculator.html">Calculator</a></li>
+                <li><a href="advanced-calculator.html">Advanced</a></li>
+                <li><a href="map.html">Map</a></li>
+                <li><a href="bulk.html">Bulk Upload</a></li>
+                <li><a href="pollution.html">Pollution</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="login.html" id="authLink">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h1 class="card-title">Advanced Calculator & Features</h1>
+            <p>Access advanced tools for comprehensive tree plantation analysis</p>
+
+            <!-- Feature Tabs -->
+            <div class="feature-tabs">
+                <button class="feature-tab active" onclick="showFeature('oxygen')">Oxygen Calculator</button>
+                <button class="feature-tab" onclick="showFeature('optimizer')">Tree Optimizer</button>
+                <button class="feature-tab" onclick="showFeature('water')">Water Calculator</button>
+                <button class="feature-tab" onclick="showFeature('cost')">Cost Estimator</button>
+                <button class="feature-tab" onclick="showFeature('soil')">Soil Suitability</button>
+                <button class="feature-tab" onclick="showFeature('future')">Future Prediction</button>
+                <button class="feature-tab" onclick="showFeature('survival')">Survival Risk</button>
+                <button class="feature-tab" onclick="showFeature('climate')">Climate Planner</button>
+                <button class="feature-tab" onclick="showFeature('growth')">Growth Simulation</button>
+                <button class="feature-tab" onclick="showFeature('multicity')">Multi-City Planner</button>
+                <button class="feature-tab" onclick="showFeature('calendar')">Planting Calendar</button>
+            </div>
+
+            <!-- Oxygen Calculator -->
+            <div id="oxygen" class="feature-content active">
+                <h2 class="card-title">Oxygen Release Calculator</h2>
+                <p>Calculate oxygen production from your trees</p>
+
+                <form id="oxygenForm" onsubmit="calculateOxygen(event)">
+                    <div class="form-group">
+                        <label for="oxygenSpecies">Tree Species</label>
+                        <select id="oxygenSpecies" required>
+                            <option value="">Select a species</option>
+                            <option value="Neem">Neem</option>
+                            <option value="Mango">Mango</option>
+                            <option value="Banyan">Banyan</option>
+                            <option value="Peepal">Peepal</option>
+                            <option value="Eucalyptus">Eucalyptus</option>
+                            <option value="Bamboo">Bamboo</option>
+                            <option value="Oak">Oak</option>
+                            <option value="Teak">Teak</option>
+                            <option value="Acacia">Acacia</option>
+                            <option value="Cedar">Cedar</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="oxygenCount">Number of Trees</label>
+                        <input type="number" id="oxygenCount" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="oxygenYears">Years</label>
+                        <input type="number" id="oxygenYears" min="1" value="5" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Calculate Oxygen</button>
+                </form>
+
+                <div id="oxygenResults" style="display: none;">
+                    <div class="metric-card">
+                        <div>Annual Oxygen Production</div>
+                        <div class="metric-value" id="annualOxygen">0</div>
+                        <div>kg O₂/year</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div>Total Oxygen over <span id="oxygenYearsDisplay">5</span> years</div>
+                        <div class="metric-value" id="totalOxygen">0</div>
+                        <div>kg O₂</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div>People Supported</div>
+                        <div class="metric-value" id="peopleSupported">0</div>
+                        <div>Adults (740 kg O₂/year each)</div>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="oxygenChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tree Optimizer -->
+            <div id="optimizer" class="feature-content">
+                <h2 class="card-title">Smart Tree Combination Optimizer</h2>
+                <p>Find the optimal tree mix to achieve your CO₂ reduction target</p>
+
+                <form id="optimizerForm" onsubmit="optimizeTrees(event)">
+                    <div class="form-group">
+                        <label for="targetCO2">Target CO₂ Reduction (kg/year)</label>
+                        <input type="number" id="targetCO2" min="1" placeholder="e.g., 500" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Find Optimal Mix</button>
+                </form>
+
+                <div id="optimizerResults"></div>
+            </div>
+
+            <!-- Water Calculator -->
+            <div id="water" class="feature-content">
+                <h2 class="card-title">Water Requirement Calculator</h2>
+                <p>Calculate water needs for your trees</p>
+
+                <form id="waterForm" onsubmit="calculateWater(event)">
+                    <div class="form-group">
+                        <label for="waterSpecies">Tree Species</label>
+                        <select id="waterSpecies" required>
+                            <option value="">Select a species</option>
+                            <option value="Neem">Neem</option>
+                            <option value="Mango">Mango</option>
+                            <option value="Banyan">Banyan</option>
+                            <option value="Peepal">Peepal</option>
+                            <option value="Eucalyptus">Eucalyptus</option>
+                            <option value="Bamboo">Bamboo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="waterCount">Number of Trees</label>
+                        <input type="number" id="waterCount" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="waterYears">Years</label>
+                        <input type="number" id="waterYears" min="1" value="1" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Calculate Water</button>
+                </form>
+
+                <div id="waterResults" style="display: none;">
+                    <div class="summary-grid">
+                        <div class="summary-card">
+                            <h3 id="waterPerWeek">0</h3>
+                            <p>Liters per Week</p>
+                        </div>
+                        <div class="summary-card">
+                            <h3 id="waterPerMonth">0</h3>
+                            <p>Liters per Month</p>
+                        </div>
+                        <div class="summary-card">
+                            <h3 id="waterPerYear">0</h3>
+                            <p>Liters per Year</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost Estimator -->
+            <div id="cost" class="feature-content">
+                <h2 class="card-title">Cost Estimator</h2>
+                <p>Estimate the total cost of tree plantation</p>
+
+                <form id="costForm" onsubmit="calculateCost(event)">
+                    <div class="form-group">
+                        <label for="costSpecies">Tree Species</label>
+                        <select id="costSpecies" required>
+                            <option value="">Select a species</option>
+                            <option value="Neem">Neem</option>
+                            <option value="Mango">Mango</option>
+                            <option value="Banyan">Banyan</option>
+                            <option value="Peepal">Peepal</option>
+                            <option value="Eucalyptus">Eucalyptus</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="costCount">Number of Trees</label>
+                        <input type="number" id="costCount" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="costYears">Years</label>
+                        <input type="number" id="costYears" min="1" value="5" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Estimate Cost</button>
+                </form>
+
+                <div id="costResults" style="display: none;">
+                    <div class="summary-grid">
+                        <div class="summary-card">
+                            <h3 id="saplingCost">₹0</h3>
+                            <p>Sapling Cost</p>
+                        </div>
+                        <div class="summary-card">
+                            <h3 id="maintenanceCost">₹0</h3>
+                            <p>Maintenance Cost</p>
+                        </div>
+                        <div class="summary-card">
+                            <h3 id="totalCost">₹0</h3>
+                            <p>Total Cost</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soil Suitability -->
+            <div id="soil" class="feature-content">
+                <h2 class="card-title">Soil Suitability Matcher</h2>
+                <p>Find the best trees for your soil type</p>
+
+                <form id="soilForm" onsubmit="findSoilTrees(event)">
+                    <div class="form-group">
+                        <label for="soilType">Soil Type</label>
+                        <select id="soilType" required>
+                            <option value="">Select soil type</option>
+                            <option value="Sandy">Sandy</option>
+                            <option value="Clay">Clay</option>
+                            <option value="Alluvial">Alluvial</option>
+                            <option value="Loamy">Loamy</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="climateZone">Climate Zone</label>
+                        <select id="climateZone" required>
+                            <option value="">Select climate zone</option>
+                            <option value="Tropical">Tropical</option>
+                            <option value="Subtropical">Subtropical</option>
+                            <option value="Temperate">Temperate</option>
+                            <option value="Arid">Arid</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Find Suitable Trees</button>
+                </form>
+
+                <div id="soilResults"></div>
+            </div>
+
+            <!-- Future Prediction -->
+            <div id="future" class="feature-content">
+                <h2 class="card-title">Future Environment Prediction</h2>
+                <p>Predict pollution reduction over time</p>
+
+                <form id="futureForm" onsubmit="predictFuture(event)">
+                    <div class="form-group">
+                        <label for="presentTrees">Current Trees</label>
+                        <input type="number" id="presentTrees" min="0" value="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="annualPlanting">Annual New Plantations</label>
+                        <input type="number" id="annualPlanting" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="predictionYears">Prediction Years</label>
+                        <select id="predictionYears">
+                            <option value="5">5 Years</option>
+                            <option value="10">10 Years</option>
+                            <option value="20">20 Years</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="currentAQI">Current City AQI</label>
+                        <input type="number" id="currentAQI" min="50" max="500" value="200" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Predict Future</button>
+                </form>
+
+                <div id="futureResults" style="display: none;">
+                    <div class="chart-container">
+                        <canvas id="futureChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Survival Risk -->
+            <div id="survival" class="feature-content">
+                <h2 class="card-title">Survival Risk Calculator</h2>
+                <p>Calculate survival risk based on city conditions</p>
+
+                <form id="survivalForm" onsubmit="calculateRisk(event)">
+                    <div class="form-group">
+                        <label for="riskSpecies">Tree Species</label>
+                        <select id="riskSpecies" required>
+                            <option value="">Select a species</option>
+                            <option value="Neem">Neem</option>
+                            <option value="Mango">Mango</option>
+                            <option value="Banyan">Banyan</option>
+                            <option value="Acacia">Acacia</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="riskCity">City</label>
+                        <input type="text" id="riskCity" placeholder="e.g., Delhi" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="riskAQI">Current AQI</label>
+                        <input type="number" id="riskAQI" min="50" max="500" value="200" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="waterSupply">Water Supply</label>
+                        <select id="waterSupply">
+                            <option value="High">High</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="heatLevel">Heat Level</label>
+                        <select id="heatLevel">
+                            <option value="Very High">Very High</option>
+                            <option value="High">High</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Calculate Risk</button>
+                </form>
+
+                <div id="riskResults" style="display: none;">
+                    <div class="metric-card">
+                        <div>Survival Risk</div>
+                        <div class="metric-value" id="riskPercentage">0%</div>
+                        <div id="riskCategory">Low Risk</div>
+                    </div>
+
+                    <div class="progress-bar" style="margin-top: 1rem;">
+                        <div class="progress-fill" id="riskBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Climate Planner -->
+            <div id="climate" class="feature-content">
+                <h2 class="card-title">Climate-Based Tree Planner</h2>
+                <p>Get climate-specific recommendations for your city</p>
+
+                <form id="climateForm" onsubmit="getClimateRecommendations(event)">
+                    <div class="form-group">
+                        <label for="climateCity">Select City</label>
+                        <select id="climateCity" required>
+                            <option value="">Select a city</option>
+                            <optgroup label="Tropical Cities">
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Kolkata">Kolkata</option>
+                                <option value="Bangalore">Bangalore</option>
+                                <option value="Hyderabad">Hyderabad</option>
+                                <option value="Goa">Goa</option>
+                            </optgroup>
+                            <optgroup label="Subtropical Cities">
+                                <option value="Delhi">Delhi</option>
+                                <option value="Ahmedabad">Ahmedabad</option>
+                                <option value="Jaipur">Jaipur</option>
+                                <option value="Pune">Pune</option>
+                                <option value="Lucknow">Lucknow</option>
+                                <option value="Kanpur">Kanpur</option>
+                            </optgroup>
+                            <optgroup label="Temperate Cities">
+                                <option value="Shimla">Shimla</option>
+                                <option value="Darjeeling">Darjeeling</option>
+                                <option value="Ooty">Ooty</option>
+                            </optgroup>
+                            <optgroup label="Arid Cities">
+                                <option value="Jaisalmer">Jaisalmer</option>
+                                <option value="Bikaner">Bikaner</option>
+                                <option value="Rajkot">Rajkot</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Get Climate Recommendations</button>
+                </form>
+
+                <div id="climateResults" style="display: none;">
+                    <div class="card" style="margin-top: 2rem;">
+                        <h3>Climate Information</h3>
+                        <div id="climateInfo"></div>
+                    </div>
+
+                    <div class="card" style="margin-top: 2rem;">
+                        <h3>Recommended Trees for Your Climate</h3>
+                        <div id="climateTrees"></div>
+                    </div>
+
+                    <div class="card" style="margin-top: 2rem;">
+                        <h3>Best Planting Months</h3>
+                        <div id="plantingMonths"></div>
+                    </div>
+
+                    <div class="card" style="margin-top: 2rem;">
+                        <h3>Climate Considerations</h3>
+                        <div id="climateConsiderations"></div>
+                    </div>
+
+                    <div class="card" style="margin-top: 2rem;">
+                        <h3>Planting Calendar</h3>
+                        <div id="plantingCalendar"></div>
+                        <button class="btn btn-outline" onclick="showVisualCalendar('${city}')" style="margin-top: 1rem;">View Full Calendar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Growth Simulation -->
+            <div id="growth" class="feature-content">
+                <h2 class="card-title">Tree Growth Simulation</h2>
+                <p>Visualize tree growth stages from seed to mature tree</p>
+
+                <form id="growthForm" onsubmit="simulateGrowth(event)">
+                    <div class="form-group">
+                        <label for="growthSpecies">Tree Species</label>
+                        <select id="growthSpecies" required>
+                            <option value="">Select a species</option>
+                            <option value="Neem">Neem</option>
+                            <option value="Mango">Mango</option>
+                            <option value="Banyan">Banyan</option>
+                            <option value="Peepal">Peepal</option>
+                            <option value="Eucalyptus">Eucalyptus</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="growthCount">Number of Trees</label>
+                        <input type="number" id="growthCount" min="1" value="10" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="growthYears">Years to Simulate</label>
+                        <input type="number" id="growthYears" min="1" max="50" value="20" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Simulate Growth</button>
+                </form>
+
+                <div id="growthResults" style="display: none;">
+                    <div class="chart-container">
+                        <canvas id="growthChart"></canvas>
+                    </div>
+                    <div id="growthStages"></div>
+                </div>
+            </div>
+
+            <!-- Multi-City Planner -->
+            <div id="multicity" class="feature-content">
+                <h2 class="card-title">Multi-City Planting Planner</h2>
+                <p>Plan tree plantations across multiple cities</p>
+
+                <div id="cityInputs">
+                    <div class="card" style="margin-bottom: 1rem;">
+                        <h3>City 1</h3>
+                        <div class="form-group">
+                            <label>City</label>
+                            <select class="city-select" required>
+                                <option value="">Select city</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Species</label>
+                            <select class="city-species" required>
+                                <option value="">Select species</option>
+                                <option value="Neem">Neem</option>
+                                <option value="Mango">Mango</option>
+                                <option value="Banyan">Banyan</option>
+                                <option value="Peepal">Peepal</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Count</label>
+                            <input type="number" class="city-count" min="1" value="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Years</label>
+                            <input type="number" class="city-years" min="1" value="5" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-outline" onclick="addCityInput()">+ Add City</button>
+                    <button class="btn btn-primary" onclick="planMultiCity()">Plan Multi-City</button>
+                </div>
+
+                <div id="multicityResults" style="display: none;">
+                    <div class="card" style="margin-top: 2rem;">
+                        <h3>City Plans</h3>
+                        <div id="cityPlansList"></div>
+                    </div>
+                    <div class="card" style="margin-top: 2rem;">
+                        <h3>Total Impact</h3>
+                        <div id="totalImpact"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Planting Calendar -->
+            <div id="calendar" class="feature-content">
+                <h2 class="card-title">Visual Planting Calendar</h2>
+                <p>See the best months to plant trees in your city</p>
+
+                <form id="calendarForm" onsubmit="showCalendar(event)">
+                    <div class="form-group">
+                        <label for="calendarCity">Select City</label>
+                        <select id="calendarCity" required>
+                            <option value="">Select a city</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Chennai">Chennai</option>
+                            <option value="Bangalore">Bangalore</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Kolkata">Kolkata</option>
+                            <option value="Pune">Pune</option>
+                            <option value="Jaipur">Jaipur</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Show Calendar</button>
+                </form>
+
+                <div id="calendarResults" style="display: none;">
+                    <div id="visualCalendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/script.js"></script>
+    <script src="static/cities-data.js"></script>
+    <script src="static/auth.js"></script>
+    <script src="static/auth-nav.js"></script>
+    <script src="static/advanced-features.js"></script>
+    <script src="static/climate-features.js"></script>
+    <script src="static/simulation-features.js"></script>
+    <script src="static/plantation-calendar.js"></script>
+    <script src="static/advanced-calculator.js"></script>
+    <script>
+        // Helper function to generate city options HTML
+        function generateCityOptions() {
+            if (typeof INDIAN_CITIES === 'undefined') {
+                return '<option value="">Select city</option><option value="Delhi">Delhi</option><option value="Mumbai">Mumbai</option><option value="Chennai">Chennai</option><option value="Bangalore">Bangalore</option><option value="Hyderabad">Hyderabad</option><option value="Kolkata">Kolkata</option>';
+            }
+            const cities = Object.keys(INDIAN_CITIES).sort();
+            let html = '<option value="">Select city</option>';
+            cities.forEach(city => {
+                html += `<option value="${city}">${city}</option>`;
+            });
+            return html;
+        }
+        
+        // Populate city dropdowns on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const citySelects = document.querySelectorAll('.city-select');
+            const cityOptions = generateCityOptions();
+            citySelects.forEach(select => {
+                select.innerHTML = cityOptions;
+            });
+        });
+    </script>
+</body>
+</html>
+
